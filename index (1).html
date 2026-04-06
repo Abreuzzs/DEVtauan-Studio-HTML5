@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Project Sena — Landing Pages de alta performance para times, atletas e escolinhas de futebol." />
+  <title>Project Sena | A Vitrine Profissional do seu Futebol</title>
+
+  <!-- Google Fonts: Bebas Neue (display) + Montserrat (body) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@300;400;500;600;700;900&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            graphite:  '#1A1A1A',
+            graphite2: '#222222',
+            graphite3: '#2D2D2D',
+            graphiteL: '#3A3A3A',
+            neon:      '#DFFF00',
+            red:       '#FF0000',
+            offwhite:  '#F0F0F0',
+          },
+          fontFamily: {
+            display: ['"Bebas Neue"', 'sans-serif'],
+            body:    ['"Montserrat"', 'sans-serif'],
+          },
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* ── Base ─────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      background-color: #1A1A1A;
+      color: #F0F0F0;
+      font-family: 'Montserrat', sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* ── Scrollbar ───────────────────────────────── */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: #1A1A1A; }
+    ::-webkit-scrollbar-thumb { background: #DFFF00; border-radius: 99px; }
+
+    /* ── Noise texture overlay ───────────────────── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+      opacity: 0.025;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── Utility: neon text ──────────────────────── */
+    .neon-text { color: #DFFF00; }
+    .red-text  { color: #FF0000; }
+
+    /* ── Neon glow on elements ───────────────────── */
+    .neon-glow {
+      box-shadow: 0 0 24px 4px rgba(223,255,0,0.25), 0 0 2px 1px rgba(223,255,0,0.5);
+    }
+    .neon-glow-sm {
+      box-shadow: 0 0 12px 2px rgba(223,255,0,0.18);
+    }
+
+    /* ── Card glass ──────────────────────────────── */
+    .glass {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      backdrop-filter: blur(6px);
+    }
+
+    /* ── CTA Button ──────────────────────────────── */
+    .btn-neon {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: #DFFF00;
+      color: #1A1A1A;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 900;
+      font-size: 0.85rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 0.9rem 2rem;
+      border-radius: 2px;
+      transition: all 0.2s ease;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+    .btn-neon:hover {
+      background: #f0ff30;
+      box-shadow: 0 0 28px 6px rgba(223,255,0,0.4);
+      transform: translateY(-2px);
+    }
+
+    .btn-outline {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      border: 1.5px solid rgba(223,255,0,0.6);
+      color: #DFFF00;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      font-size: 0.8rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 0.75rem 1.5rem;
+      border-radius: 2px;
+      transition: all 0.2s ease;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+    .btn-outline:hover {
+      background: rgba(223,255,0,0.08);
+      border-color: #DFFF00;
+    }
+
+    /* ── Diagonal section divider ────────────────── */
+    .slant-top {
+      clip-path: polygon(0 40px, 100% 0, 100% 100%, 0 100%);
+    }
+    .slant-both {
+      clip-path: polygon(0 40px, 100% 0, 100% calc(100% - 40px), 0 100%);
+    }
+
+    /* ── Horizontal marquee strip ────────────────── */
+    .marquee-track {
+      display: flex;
+      width: max-content;
+      animation: marquee 22s linear infinite;
+    }
+    @keyframes marquee {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+
+    /* ── Fade-up on scroll ───────────────────────── */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(32px);
+      transition: opacity 0.65s ease, transform 0.65s ease;
+    }
+    .fade-up.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ── Hero diagonal accent ────────────────────── */
+    .hero-accent {
+      position: absolute;
+      right: -80px;
+      top: 0;
+      width: 480px;
+      height: 100%;
+      background: rgba(223,255,0,0.04);
+      transform: skewX(-12deg);
+      pointer-events: none;
+    }
+    .hero-accent-2 {
+      position: absolute;
+      right: 80px;
+      top: 0;
+      width: 180px;
+      height: 100%;
+      background: rgba(255,0,0,0.03);
+      transform: skewX(-12deg);
+      pointer-events: none;
+    }
+
+    /* ── Number stat counter ─────────────────────── */
+    .stat-number {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 3.5rem;
+      line-height: 1;
+      color: #DFFF00;
+    }
+
+    /* ── Service card hover ──────────────────────── */
+    .service-card {
+      transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+      border: 1px solid rgba(255,255,255,0.07);
+    }
+    .service-card:hover {
+      transform: translateY(-6px);
+      border-color: rgba(223,255,0,0.3);
+      box-shadow: 0 16px 40px rgba(0,0,0,0.5), 0 0 20px rgba(223,255,0,0.1);
+    }
+
+    /* ── Diff card ───────────────────────────────── */
+    .diff-card {
+      border-left: 3px solid #DFFF00;
+      transition: background 0.2s;
+    }
+    .diff-card:hover { background: rgba(223,255,0,0.05); }
+
+    /* ── Nav link hover underline ────────────────── */
+    .nav-link {
+      position: relative;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(240,240,240,0.7);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      left: 0; bottom: -3px;
+      width: 0; height: 1.5px;
+      background: #DFFF00;
+      transition: width 0.25s;
+    }
+    .nav-link:hover { color: #F0F0F0; }
+    .nav-link:hover::after { width: 100%; }
+
+    /* ── Mobile menu ─────────────────────────────── */
+    #mobile-menu {
+      display: none;
+    }
+    #mobile-menu.open {
+      display: flex;
+    }
+
+    /* ── Section label ───────────────────────────── */
+    .section-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #DFFF00;
+      margin-bottom: 1rem;
+    }
+    .section-label::before {
+      content: '';
+      display: block;
+      width: 20px;
+      height: 1.5px;
+      background: #DFFF00;
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- ═══════════════════════════════════════════════════
+     HEADER / NAV
+═══════════════════════════════════════════════════ -->
+<header id="header" class="fixed top-0 left-0 w-full z-50 transition-all duration-300">
+  <div class="max-w-6xl mx-auto px-5 flex items-center justify-between h-16">
+
+    <!-- Logo -->
+    <a href="#hero" class="flex items-center gap-2 text-decoration-none">
+      <span style="font-family:'Bebas Neue',sans-serif; font-size:1.5rem; color:#DFFF00; letter-spacing:0.06em;">PROJECT</span>
+      <span style="font-family:'Bebas Neue',sans-serif; font-size:1.5rem; color:#F0F0F0; letter-spacing:0.06em;">SENA</span>
+      <span style="width:6px;height:6px;background:#FF0000;border-radius:50%;display:inline-block;margin-bottom:4px;"></span>
+    </a>
+
+    <!-- Desktop Nav -->
+    <nav class="hidden md:flex items-center gap-8">
+      <a href="#diferenciais" class="nav-link">Diferenciais</a>
+      <a href="#servicos"     class="nav-link">Serviços</a>
+      <a href="#autoridade"   class="nav-link">Por quê?</a>
+      <a href="https://wa.me/5511996108130" target="_blank" class="btn-neon" style="padding:0.6rem 1.4rem;font-size:0.7rem;">
+        <i data-lucide="message-circle" style="width:14px;height:14px;"></i>
+        Falar no WhatsApp
+      </a>
+    </nav>
+
+    <!-- Mobile hamburger -->
+    <button id="menu-btn" class="md:hidden text-offwhite focus:outline-none" aria-label="Menu">
+      <i data-lucide="menu" style="width:24px;height:24px;"></i>
+    </button>
+  </div>
+
+  <!-- Mobile Nav Dropdown -->
+  <div id="mobile-menu" class="md:hidden flex-col gap-0 bg-graphite2 border-t border-graphiteL px-5 pb-5 pt-3">
+    <a href="#diferenciais" class="nav-link block py-3 border-b border-graphiteL" onclick="closeMobile()">Diferenciais</a>
+    <a href="#servicos"     class="nav-link block py-3 border-b border-graphiteL" onclick="closeMobile()">Serviços</a>
+    <a href="#autoridade"   class="nav-link block py-3 border-b border-graphiteL" onclick="closeMobile()">Por quê?</a>
+    <a href="https://wa.me/5511996108130" target="_blank" class="btn-neon mt-4 justify-center" onclick="closeMobile()">
+      <i data-lucide="message-circle" style="width:14px;height:14px;"></i>
+      Falar no WhatsApp
+    </a>
+  </div>
+</header>
+
+
+<!-- ═══════════════════════════════════════════════════
+     MARQUEE STRIP (below header)
+═══════════════════════════════════════════════════ -->
+<div style="margin-top:64px; background:#DFFF00; overflow:hidden; height:32px; display:flex; align-items:center;">
+  <div class="marquee-track">
+    <!-- duplicated for seamless loop -->
+    <span style="font-family:'Bebas Neue',sans-serif;color:#1A1A1A;font-size:0.85rem;letter-spacing:0.14em;padding:0 2.5rem;">⚡ ALTA PERFORMANCE</span>
+    <span style="font-family:'Bebas Neue',sans-serif;color:#1A1A1A;font-size:0.85rem;letter-spacing:0.14em;padding:0 2.5rem;">🏆 DESIGN DE ELITE</span>
+    <span style="font-family:'Bebas Neue',sans-serif;color:#1A1A1A;font-size:0.85rem;letter-spacing:0.14em;padding:0 2.5rem;">📈 VITRINE PROFISSIONAL</span>
+    <span style="font-family:'Bebas Neue',sans-serif;color:#1A1A1A;font-size:0.85rem;letter-spacing:0.14em;padding:0 2.5rem;">⚽ FUTEBOL DO Brasil</span>
+    <span style="font-family:'Bebas Neue',sans-serif;color:#1A1A1A;font-size:0.85rem;letter-spacing:0.14em;padding:0 2.5rem;">🎨 IDENTIDADE EXCLUSIVA</span>
+    <span style="font-family:'Bebas Neue',sans-serif;color:#1A1A1A;font-size:0.85rem;letter-spacing:0.14em;padding:0 2.5rem;">⚡ ALTA PERFORMANCE</span>
+    <span style="font-family:'Bebas Neue',sans-serif;color:#1A1A1A;font-size:0.85rem;letter-spacing:0.14em;padding:0 2.5rem;">🏆 DESIGN DE ELITE</span>
+    <span style="font-family:'Bebas Neue',sans-serif;color:#1A1A1A;font-size:0.85rem;letter-spacing:0.14em;padding:0 2.5rem;">📈 VITRINE PROFISSIONAL</span>
+    <span style="font-family:'Bebas Neue',sans-serif;color:#1A1A1A;font-size:0.85rem;letter-spacing:0.14em;padding:0 2.5rem;">⚽ FUTEBOL DO BRASIL</span>
+    <span style="font-family:'Bebas Neue',sans-serif;color:#1A1A1A;font-size:0.85rem;letter-spacing:0.14em;padding:0 2.5rem;">🎨 IDENTIDADE EXCLUSIVA</span>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════
+     HERO SECTION
+═══════════════════════════════════════════════════ -->
+<section id="hero" class="relative min-h-screen flex items-center overflow-hidden">
+  <!-- Decorative diagonal accents -->
+  <div class="hero-accent"></div>
+  <div class="hero-accent-2"></div>
+
+  <!-- Large decorative background number -->
+  <div style="
+    position:absolute; right:-20px; top:50%;
+    transform:translateY(-50%);
+    font-family:'Bebas Neue',sans-serif;
+    font-size:clamp(160px,25vw,320px);
+    color:rgba(223,255,0,0.03);
+    line-height:1;
+    pointer-events:none;
+    user-select:none;
+  ">10</div>
+
+  <div class="max-w-6xl mx-auto px-5 py-24 relative z-10 w-full">
+    <div class="max-w-2xl">
+
+      <!-- Label -->
+      <div class="section-label fade-up">Bem-vindo ao Project Sena</div>
+
+      <!-- Main headline -->
+      <h1 class="fade-up" style="
+        font-family:'Bebas Neue',sans-serif;
+        font-size:clamp(2.8rem,8vw,5.5rem);
+        line-height:1.05;
+        letter-spacing:0.02em;
+        margin-bottom:1.5rem;
+        animation-delay:0.1s;
+      ">
+        A Vitrine<br/>
+        <span class="neon-text">Profissional</span><br/>
+        do seu Futebol.
+      </h1>
+
+      <!-- Subheadline -->
+      <p class="fade-up" style="
+        font-size:clamp(0.9rem,2vw,1.05rem);
+        line-height:1.7;
+        color:rgba(240,240,240,0.7);
+        margin-bottom:2.5rem;
+        max-width:480px;
+        animation-delay:0.2s;
+      ">
+        Landing Pages de alta performance para <strong class="text-offwhite">times, atletas e escolinhas</strong>.
+        Saia do amadorismo e conquiste patrocinadores.
+      </p>
+
+      <!-- CTAs -->
+      <div class="fade-up flex flex-wrap gap-4 items-center" style="animation-delay:0.3s;">
+        <a href="https://wa.me/5511996108130" target="_blank" class="btn-neon neon-glow">
+          <i data-lucide="zap" style="width:16px;height:16px;"></i>
+          Quero meu Site Oficial
+        </a>
+        <a href="#servicos" class="btn-outline">
+          Ver Serviços
+          <i data-lucide="arrow-down" style="width:14px;height:14px;"></i>
+        </a>
+      </div>
+
+      <!-- Small trust line -->
+      <p class="fade-up" style="
+        margin-top:2rem;
+        font-size:0.72rem;
+        color:rgba(240,240,240,0.35);
+        font-weight:600;
+        letter-spacing:0.1em;
+        text-transform:uppercase;
+        animation-delay:0.4s;
+      ">
+        Desenvolvido por Sena • 15 anos • SP, Brasil
+      </p>
+
+    </div>
+  </div>
+
+  <!-- Bottom fade -->
+  <div style="
+    position:absolute; bottom:0; left:0; right:0; height:120px;
+    background:linear-gradient(to top, #1A1A1A, transparent);
+    pointer-events:none;
+  "></div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════
+     STATS STRIP
+═══════════════════════════════════════════════════ -->
+<div style="background:#222222; border-top:1px solid #2D2D2D; border-bottom:1px solid #2D2D2D;">
+  <div class="max-w-6xl mx-auto px-5 py-10">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+
+      <div class="fade-up">
+        <div class="stat-number">100<span class="neon-text">%</span></div>
+        <p style="font-size:0.72rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:rgba(240,240,240,0.5);margin-top:0.25rem;">Responsivo</p>
+      </div>
+
+      <div class="fade-up" style="transition-delay:0.1s">
+        <div class="stat-number"><span class="neon-text">&lt;</span>1s</div>
+        <p style="font-size:0.72rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:rgba(240,240,240,0.5);margin-top:0.25rem;">Carregamento</p>
+      </div>
+
+      <div class="fade-up" style="transition-delay:0.2s">
+        <div class="stat-number">3<span class="neon-text">G</span></div>
+        <p style="font-size:0.72rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:rgba(240,240,240,0.5);margin-top:0.25rem;">Otimizado</p>
+      </div>
+
+      <div class="fade-up" style="transition-delay:0.3s">
+        <div class="stat-number">∞</div>
+        <p style="font-size:0.72rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:rgba(240,240,240,0.5);margin-top:0.25rem;">Possibilidades</p>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════
+     DIFERENCIAIS — 3 CARDS
+═══════════════════════════════════════════════════ -->
+<section id="diferenciais" class="py-24">
+  <div class="max-w-6xl mx-auto px-5">
+
+    <!-- Section header -->
+    <div class="mb-14 fade-up">
+      <div class="section-label">Por que o Project Sena?</div>
+      <h2 style="font-family:'Bebas Neue',sans-serif;font-size:clamp(2rem,5vw,3.2rem);letter-spacing:0.03em;">
+        Três pilares que fazem a <span class="neon-text">diferença</span>
+      </h2>
+    </div>
+
+    <!-- Cards grid -->
+    <div class="grid md:grid-cols-3 gap-6">
+
+      <!-- Card 1: Performance -->
+      <div class="diff-card glass rounded-sm p-7 fade-up">
+        <div style="
+          width:48px;height:48px;
+          background:rgba(223,255,0,0.1);
+          border-radius:4px;
+          display:flex;align-items:center;justify-content:center;
+          margin-bottom:1.25rem;
+        ">
+          <i data-lucide="zap" style="width:22px;height:22px;color:#DFFF00;"></i>
+        </div>
+        <h3 style="font-family:'Bebas Neue',sans-serif;font-size:1.5rem;letter-spacing:0.06em;margin-bottom:0.75rem;">Performance</h3>
+        <p style="font-size:0.875rem;line-height:1.7;color:rgba(240,240,240,0.65);">
+          Carregamento instantâneo, otimizado para redes 3G e 4G. Seu clube não pode perder nenhum fã por conta de um site lento.
+        </p>
+      </div>
+
+      <!-- Card 2: Design -->
+      <div class="diff-card glass rounded-sm p-7 fade-up" style="transition-delay:0.12s">
+        <div style="
+          width:48px;height:48px;
+          background:rgba(223,255,0,0.1);
+          border-radius:4px;
+          display:flex;align-items:center;justify-content:center;
+          margin-bottom:1.25rem;
+        ">
+          <i data-lucide="palette" style="width:22px;height:22px;color:#DFFF00;"></i>
+        </div>
+        <h3 style="font-family:'Bebas Neue',sans-serif;font-size:1.5rem;letter-spacing:0.06em;margin-bottom:0.75rem;">Design de Elite</h3>
+        <p style="font-size:0.875rem;line-height:1.7;color:rgba(240,240,240,0.65);">
+          Identidade visual exclusiva para cada clube ou atleta. Nenhum template genérico — cada projeto é único como o seu escudo.
+        </p>
+      </div>
+
+      <!-- Card 3: Vitrine -->
+      <div class="diff-card glass rounded-sm p-7 fade-up" style="transition-delay:0.24s">
+        <div style="
+          width:48px;height:48px;
+          background:rgba(223,255,0,0.1);
+          border-radius:4px;
+          display:flex;align-items:center;justify-content:center;
+          margin-bottom:1.25rem;
+        ">
+          <i data-lucide="trending-up" style="width:22px;height:22px;color:#DFFF00;"></i>
+        </div>
+        <h3 style="font-family:'Bebas Neue',sans-serif;font-size:1.5rem;letter-spacing:0.06em;margin-bottom:0.75rem;">Vitrine de Negócios</h3>
+        <p style="font-size:0.875rem;line-height:1.7;color:rgba(240,240,240,0.65);">
+          Espaço profissional fixo para atrair e manter patrocinadores. Mostre resultados, conquistas e história com credibilidade.
+        </p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════
+     SERVIÇOS
+═══════════════════════════════════════════════════ -->
+<section id="servicos" style="background:#222222;padding:6rem 0;" class="relative">
+
+  <!-- Top diagonal cut -->
+  <div style="
+    position:absolute; top:-40px; left:0; right:0; height:40px;
+    background:#222222;
+    clip-path: polygon(0 100%, 100% 0, 100% 100%);
+  "></div>
+
+  <div class="max-w-6xl mx-auto px-5">
+
+    <!-- Section header -->
+    <div class="mb-14 fade-up">
+      <div class="section-label">O que entrego</div>
+      <h2 style="font-family:'Bebas Neue',sans-serif;font-size:clamp(2rem,5vw,3.2rem);letter-spacing:0.03em;">
+        Serviços feitos para o <span class="neon-text">futebol</span>
+      </h2>
+    </div>
+
+    <!-- Service cards -->
+    <div class="grid md:grid-cols-3 gap-6">
+
+      <!-- Service 1 -->
+      <div class="service-card glass rounded-sm overflow-hidden fade-up">
+        <!-- Top accent bar -->
+        <div style="height:3px;background:linear-gradient(90deg,#DFFF00,#b5d400);"></div>
+        <div class="p-7">
+          <div style="
+            font-family:'Bebas Neue',sans-serif;
+            font-size:3.5rem;
+            color:rgba(223,255,0,0.12);
+            line-height:1;
+            margin-bottom:0.5rem;
+          ">01</div>
+          <h3 style="font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:0.06em;margin-bottom:0.75rem;">
+            Portfólio de Times
+          </h3>
+          <p style="font-size:0.85rem;line-height:1.7;color:rgba(240,240,240,0.65);margin-bottom:1.5rem;">
+            Site completo para seu clube de várzea: elenco, resultados, campeonatos, galeria de fotos e espaço para patrocinadores. Tudo em uma página rápida e bonita.
+          </p>
+          <ul style="list-style:none;padding:0;margin:0 0 1.75rem 0;display:flex;flex-direction:column;gap:0.5rem;">
+            <li style="display:flex;align-items:center;gap:0.5rem;font-size:0.78rem;color:rgba(240,240,240,0.7);">
+              <i data-lucide="check" style="width:14px;height:14px;color:#DFFF00;flex-shrink:0;"></i> Tabela de jogadores
+            </li>
+            <li style="display:flex;align-items:center;gap:0.5rem;font-size:0.78rem;color:rgba(240,240,240,0.7);">
+              <i data-lucide="check" style="width:14px;height:14px;color:#DFFF00;flex-shrink:0;"></i> Galeria de fotos e vídeos
+            </li>
+            <li style="display:flex;align-items:center;gap:0.5rem;font-size:0.78rem;color:rgba(240,240,240,0.7);">
+              <i data-lucide="check" style="width:14px;height:14px;color:#DFFF00;flex-shrink:0;"></i> Área de patrocinadores
+            </li>
+          </ul>
+          <a href="https://wa.me/5511996108130" target="_blank" class="btn-neon" style="width:100%;justify-content:center;font-size:0.75rem;">
+            Pedir orçamento
+          </a>
+        </div>
+      </div>
+
+      <!-- Service 2 -->
+      <div class="service-card glass rounded-sm overflow-hidden fade-up" style="transition-delay:0.12s;">
+        <div style="height:3px;background:linear-gradient(90deg,#FF0000,#cc0000);"></div>
+        <div class="p-7">
+          <div style="
+            font-family:'Bebas Neue',sans-serif;
+            font-size:3.5rem;
+            color:rgba(255,0,0,0.12);
+            line-height:1;
+            margin-bottom:0.5rem;
+          ">02</div>
+          <h3 style="font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:0.06em;margin-bottom:0.75rem;">
+            Currículo Digital de Atleta
+          </h3>
+          <p style="font-size:0.85rem;line-height:1.7;color:rgba(240,240,240,0.65);margin-bottom:1.5rem;">
+            Sua carreira em uma página profissional. Estatísticas, conquistas, vídeos de gols, contato para agenciamento. O cartão de visita do jogador moderno.
+          </p>
+          <ul style="list-style:none;padding:0;margin:0 0 1.75rem 0;display:flex;flex-direction:column;gap:0.5rem;">
+            <li style="display:flex;align-items:center;gap:0.5rem;font-size:0.78rem;color:rgba(240,240,240,0.7);">
+              <i data-lucide="check" style="width:14px;height:14px;color:#FF0000;flex-shrink:0;"></i> Stats e conquistas
+            </li>
+            <li style="display:flex;align-items:center;gap:0.5rem;font-size:0.78rem;color:rgba(240,240,240,0.7);">
+              <i data-lucide="check" style="width:14px;height:14px;color:#FF0000;flex-shrink:0;"></i> Vídeo destaque (highlight)
+            </li>
+            <li style="display:flex;align-items:center;gap:0.5rem;font-size:0.78rem;color:rgba(240,240,240,0.7);">
+              <i data-lucide="check" style="width:14px;height:14px;color:#FF0000;flex-shrink:0;"></i> Formulário de contato
+            </li>
+          </ul>
+          <a href="https://wa.me/5511996108130" target="_blank" class="btn-neon" style="width:100%;justify-content:center;font-size:0.75rem;background:#FF0000;color:#fff;">
+            Pedir orçamento
+          </a>
+        </div>
+      </div>
+
+      <!-- Service 3 -->
+      <div class="service-card glass rounded-sm overflow-hidden fade-up" style="transition-delay:0.24s;">
+        <div style="height:3px;background:linear-gradient(90deg,#DFFF00,#b5d400);"></div>
+        <div class="p-7">
+          <div style="
+            font-family:'Bebas Neue',sans-serif;
+            font-size:3.5rem;
+            color:rgba(223,255,0,0.12);
+            line-height:1;
+            margin-bottom:0.5rem;
+          ">03</div>
+          <h3 style="font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:0.06em;margin-bottom:0.75rem;">
+            Landing Page para Escolinhas
+          </h3>
+          <p style="font-size:0.85rem;line-height:1.7;color:rgba(240,240,240,0.65);margin-bottom:1.5rem;">
+            Atraia novos alunos com uma página de vendas profissional. Apresente metodologia, corpo técnico, turmas disponíveis e formulário de matrícula.
+          </p>
+          <ul style="list-style:none;padding:0;margin:0 0 1.75rem 0;display:flex;flex-direction:column;gap:0.5rem;">
+            <li style="display:flex;align-items:center;gap:0.5rem;font-size:0.78rem;color:rgba(240,240,240,0.7);">
+              <i data-lucide="check" style="width:14px;height:14px;color:#DFFF00;flex-shrink:0;"></i> Turmas e horários
+            </li>
+            <li style="display:flex;align-items:center;gap:0.5rem;font-size:0.78rem;color:rgba(240,240,240,0.7);">
+              <i data-lucide="check" style="width:14px;height:14px;color:#DFFF00;flex-shrink:0;"></i> Formulário de matrícula
+            </li>
+            <li style="display:flex;align-items:center;gap:0.5rem;font-size:0.78rem;color:rgba(240,240,240,0.7);">
+              <i data-lucide="check" style="width:14px;height:14px;color:#DFFF00;flex-shrink:0;"></i> Mapa e localização
+            </li>
+          </ul>
+          <a href="https://wa.me/5511996108130" target="_blank" class="btn-neon" style="width:100%;justify-content:center;font-size:0.75rem;">
+            Pedir orçamento
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Bottom diagonal cut -->
+  <div style="
+    position:absolute; bottom:-40px; left:0; right:0; height:40px;
+    background:#222222;
+    clip-path: polygon(0 0, 100% 0, 0 100%);
+  "></div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════
+     AUTORIDADE / POR QUÊ UM SITE IMPORTA
+═══════════════════════════════════════════════════ -->
+<section id="autoridade" class="py-32">
+  <div class="max-w-6xl mx-auto px-5">
+
+    <div class="grid md:grid-cols-2 gap-16 items-center">
+
+      <!-- Text side -->
+      <div class="fade-up">
+        <div class="section-label">A verdade do jogo</div>
+        <h2 style="font-family:'Bebas Neue',sans-serif;font-size:clamp(2rem,5vw,3.2rem);letter-spacing:0.03em;margin-bottom:1.5rem;">
+          Um site oficial muda o <span class="neon-text">jogo</span> dentro e fora do campo.
+        </h2>
+        <p style="font-size:0.9rem;line-height:1.8;color:rgba(240,240,240,0.65);margin-bottom:1.25rem;">
+          No futebol de várzea, o talento existe — o que falta é visibilidade. Um site profissional transforma seu clube numa <strong class="text-offwhite">marca</strong>: gera respeito, cria credibilidade com patrocinadores e preserva cada vitória, cada ídolo, cada história do seu clube para sempre.
+        </p>
+        <p style="font-size:0.9rem;line-height:1.8;color:rgba(240,240,240,0.65);margin-bottom:2rem;">
+          Patrocinadores não investem no improviso. Eles investem em quem tem presença profissional. Um endereço na internet que diz <em>"somos sérios"</em> vale mais do que mil histórias contadas no Instagram.
+        </p>
+
+        <a href="https://wa.me/5511996108130" target="_blank" class="btn-neon neon-glow-sm">
+          <i data-lucide="external-link" style="width:15px;height:15px;"></i>
+          Quero essa presença agora
+        </a>
+      </div>
+
+      <!-- Visual side: Feature list -->
+      <div class="fade-up" style="transition-delay:0.15s;">
+        <div style="display:flex;flex-direction:column;gap:1rem;">
+
+          <div style="display:flex;align-items:flex-start;gap:1rem;padding:1.2rem;background:rgba(255,255,255,0.03);border-radius:2px;border:1px solid rgba(255,255,255,0.07);">
+            <div style="width:36px;height:36px;background:rgba(223,255,0,0.12);border-radius:3px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+              <i data-lucide="shield-check" style="width:18px;height:18px;color:#DFFF00;"></i>
+            </div>
+            <div>
+              <p style="font-weight:700;font-size:0.9rem;margin-bottom:0.25rem;">Credibilidade instantânea</p>
+              <p style="font-size:0.8rem;color:rgba(240,240,240,0.55);line-height:1.6;">Mostre para parceiros e patrocinadores que seu projeto é sério.</p>
+            </div>
+          </div>
+
+          <div style="display:flex;align-items:flex-start;gap:1rem;padding:1.2rem;background:rgba(255,255,255,0.03);border-radius:2px;border:1px solid rgba(255,255,255,0.07);">
+            <div style="width:36px;height:36px;background:rgba(223,255,0,0.12);border-radius:3px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+              <i data-lucide="book-open" style="width:18px;height:18px;color:#DFFF00;"></i>
+            </div>
+            <div>
+              <p style="font-weight:700;font-size:0.9rem;margin-bottom:0.25rem;">História preservada</p>
+              <p style="font-size:0.8rem;color:rgba(240,240,240,0.55);line-height:1.6;">Campeonatos, artilheiros e memórias documentadas para sempre.</p>
+            </div>
+          </div>
+
+          <div style="display:flex;align-items:flex-start;gap:1rem;padding:1.2rem;background:rgba(255,255,255,0.03);border-radius:2px;border:1px solid rgba(255,255,255,0.07);">
+            <div style="width:36px;height:36px;background:rgba(223,255,0,0.12);border-radius:3px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+              <i data-lucide="handshake" style="width:18px;height:18px;color:#DFFF00;"></i>
+            </div>
+            <div>
+              <p style="font-weight:700;font-size:0.9rem;margin-bottom:0.25rem;">Patrocinadores atraídos</p>
+              <p style="font-size:0.8rem;color:rgba(240,240,240,0.55);line-height:1.6;">Espaço de mídia dedicado para marcas que queiram investir no seu clube.</p>
+            </div>
+          </div>
+
+          <div style="display:flex;align-items:flex-start;gap:1rem;padding:1.2rem;background:rgba(255,255,255,0.03);border-radius:2px;border:1px solid rgba(255,255,255,0.07);">
+            <div style="width:36px;height:36px;background:rgba(223,255,0,0.12);border-radius:3px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+              <i data-lucide="users" style="width:18px;height:18px;color:#DFFF00;"></i>
+            </div>
+            <div>
+              <p style="font-weight:700;font-size:0.9rem;margin-bottom:0.25rem;">Comunidade fortalecida</p>
+              <p style="font-size:0.8rem;color:rgba(240,240,240,0.55);line-height:1.6;">Torcedores e jogadores com um ponto de encontro oficial e profissional.</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════
+     CTA FULL-WIDTH BANNER
+═══════════════════════════════════════════════════ -->
+<div style="background:#DFFF00;padding:5rem 1.25rem;text-align:center;position:relative;overflow:hidden;">
+  <!-- Subtle pattern -->
+  <div style="
+    position:absolute;inset:0;
+    background-image:repeating-linear-gradient(
+      45deg,
+      rgba(0,0,0,0.03) 0px,
+      rgba(0,0,0,0.03) 1px,
+      transparent 1px,
+      transparent 20px
+    );
+    pointer-events:none;
+  "></div>
+  <div style="position:relative;z-index:1;max-width:640px;margin:0 auto;">
+    <h2 style="
+      font-family:'Bebas Neue',sans-serif;
+      font-size:clamp(2.2rem,7vw,4rem);
+      color:#1A1A1A;
+      letter-spacing:0.03em;
+      line-height:1.1;
+      margin-bottom:1rem;
+    ">
+      Pronto para subir de nível?
+    </h2>
+    <p style="font-size:0.95rem;color:rgba(26,26,26,0.7);margin-bottom:2rem;font-weight:500;">
+      Fale agora no WhatsApp e receba um orçamento personalizado. Rápido, sem enrolação.
+    </p>
+    <a href="https://wa.me/5511996108130" target="_blank"
+      style="
+        display:inline-flex;align-items:center;gap:0.6rem;
+        background:#1A1A1A;color:#DFFF00;
+        font-family:'Montserrat',sans-serif;font-weight:900;
+        font-size:0.85rem;letter-spacing:0.1em;text-transform:uppercase;
+        padding:1rem 2.5rem;border-radius:2px;text-decoration:none;
+        transition:all 0.2s;
+      "
+      onmouseover="this.style.background='#2D2D2D';this.style.transform='translateY(-2px)';"
+      onmouseout="this.style.background='#1A1A1A';this.style.transform='translateY(0)';"
+    >
+      <i data-lucide="message-circle" style="width:18px;height:18px;"></i>
+      Falar no WhatsApp agora
+    </a>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════
+     FOOTER
+═══════════════════════════════════════════════════ -->
+<footer style="background:#111111;padding:3rem 1.25rem;">
+  <div class="max-w-6xl mx-auto">
+
+    <div style="display:flex;flex-direction:column;gap:2rem;align-items:center;text-align:center;">
+
+      <!-- Logo -->
+      <div>
+        <span style="font-family:'Bebas Neue',sans-serif;font-size:1.8rem;color:#DFFF00;letter-spacing:0.06em;">PROJECT</span>
+        <span style="font-family:'Bebas Neue',sans-serif;font-size:1.8rem;color:#F0F0F0;letter-spacing:0.06em;"> SENA</span>
+        <span style="width:6px;height:6px;background:#FF0000;border-radius:50%;display:inline-block;margin-bottom:4px;margin-left:3px;"></span>
+      </div>
+
+      <p style="font-size:0.8rem;color:rgba(240,240,240,0.4);max-width:380px;line-height:1.7;">
+        Desenvolvimento front-end e design gráfico especializado em futebol. SP, Brasil.
+      </p>
+
+      <!-- Nav links -->
+      <nav style="display:flex;flex-wrap:wrap;gap:1.5rem;justify-content:center;">
+        <a href="#diferenciais" class="nav-link">Diferenciais</a>
+        <a href="#servicos"     class="nav-link">Serviços</a>
+        <a href="#autoridade"   class="nav-link">Por quê?</a>
+        <a href="https://wa.me/5511996108130" target="_blank" class="nav-link" style="color:#DFFF00;">WhatsApp</a>
+      </nav>
+
+      <!-- Divider -->
+      <div style="width:100%;height:1px;background:rgba(255,255,255,0.06);"></div>
+
+      <!-- Bottom line -->
+      <p style="font-size:0.7rem;color:rgba(240,240,240,0.25);letter-spacing:0.08em;text-transform:uppercase;">
+        © 2025 Project Sena. Todos os direitos reservados.
+      </p>
+
+    </div>
+  </div>
+</footer>
+
+
+<!-- ═══════════════════════════════════════════════════
+     FLOATING WHATSAPP BUTTON
+═══════════════════════════════════════════════════ -->
+<a href="https://wa.me/5511996108130" target="_blank" id="wa-float" aria-label="WhatsApp"
+  style="
+    position:fixed; bottom:24px; right:24px; z-index:100;
+    width:54px; height:54px;
+    background:#25D366;
+    border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    box-shadow: 0 4px 20px rgba(37,211,102,0.45);
+    transition: transform 0.2s, box-shadow 0.2s;
+    text-decoration:none;
+  "
+  onmouseover="this.style.transform='scale(1.1)';this.style.boxShadow='0 6px 28px rgba(37,211,102,0.6)';"
+  onmouseout="this.style.transform='scale(1)';this.style.boxShadow='0 4px 20px rgba(37,211,102,0.45)';"
+>
+  <!-- WhatsApp SVG icon -->
+  <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="white">
+    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+  </svg>
+</a>
+
+
+<!-- ═══════════════════════════════════════════════════
+     SCRIPTS
+═══════════════════════════════════════════════════ -->
+<script>
+  // Initialize Lucide icons
+  lucide.createIcons();
+
+  // ── Header: Add backdrop on scroll ──────────────
+  const header = document.getElementById('header');
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 60) {
+      header.style.background = 'rgba(26,26,26,0.95)';
+      header.style.backdropFilter = 'blur(12px)';
+      header.style.borderBottom = '1px solid rgba(255,255,255,0.06)';
+    } else {
+      header.style.background = 'transparent';
+      header.style.backdropFilter = 'none';
+      header.style.borderBottom = 'none';
+    }
+  });
+
+  // ── Mobile menu toggle ───────────────────────────
+  const menuBtn  = document.getElementById('menu-btn');
+  const mobileMenu = document.getElementById('mobile-menu');
+
+  menuBtn.addEventListener('click', () => {
+    mobileMenu.classList.toggle('open');
+  });
+
+  function closeMobile() {
+    mobileMenu.classList.remove('open');
+  }
+
+  // ── Scroll-triggered fade-up animations ─────────
+  const fadeEls = document.querySelectorAll('.fade-up');
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.12 });
+
+  fadeEls.forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
